@@ -1,0 +1,345 @@
+<!DOCTYPE html>       
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Locker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            margin: 0;
+            overflow: hidden;
+        }
+        #login-container, #profile-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #login-container {
+            display: flex;
+        }
+        input[type="password"], input[type="file"], input[type="text"], select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        img {
+            width: 100px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .section {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+        }
+        .section h3 {
+            background: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .section div {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+        }
+        .logout-container {
+            margin-top: 20px;
+        }
+        #image-container img, #video-container video {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .item-container {
+            position: relative;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chat-section {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .chat-messages {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        .chat-input input, .chat-input select {
+            width: calc(100% - 20px);
+            margin: 5px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .message span {
+            display: block;
+        }
+        .message .sender {
+            font-weight: bold;
+        }
+        .message .text {
+            margin-left: 10px;
+        }
+        .message .time {
+            font-size: 0.8em;
+            color: #888;
+            text-align: right;
+        }
+        audio, video {
+            width: 100%;
+            max-width: 300px; /* Set a maximum width for videos */
+            height: auto;
+            margin-top: 10px;
+        }
+        .clear-chat {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+      <center><img src="https://i.pinimg.com/originals/da/18/46/da1846bd15a43e11652101435ec6a5f1.gif" width="100%"></center>
+        <h3><font color=red><strong>Piku</font> & <font color=green>Satyam ❤️</font></strong></h3>
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="profile-container">
+        <img src="https://download-free-images.com/img/00003/you-are-welcome-53865.gif" alt="Profile Photo" width="200">
+        <h2>Personal Locker 🔒</h2>
+
+        <div class="section">
+            <h3>Satyam's Images</h3>
+            <div id="satyam-image-container">
+                <input type="file" accept="image/*" id="satyam-image-upload" onchange="uploadFile('satyam-image')">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Satyam's Videos</h3>
+            <div id="satyam-video-container">
+                <input type="file" accept="video/*" id="satyam-video-upload" onchange="uploadFile('satyam-video')">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Piku's Images</h3>
+            <div id="piku-image-container">
+                <input type="file" accept="image/*" id="piku-image-upload" onchange="uploadFile('piku-image')">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Piku's Videos</h3>
+            <div id="piku-video-container">
+                <input type="file" accept="video/*" id="piku-video-upload" onchange="uploadFile('piku-video')">
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h3>Chat</h3>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input">
+                <select id="chat-sender">
+                    <option value="Satyam">Satyam</option>
+                    <option value="Piku">Piku</option>
+                </select>
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <button class="clear-chat" onclick="clearChat()">Clear Chat</button>
+        </div>
+
+        <div class="audio-section">
+            <h3>Music</h3>
+            <div id="audio-container">
+                <input type="file" accept="audio/*" id="audio-upload" onchange="uploadFile('audio')">
+            </div>
+        </div>
+
+        <div class="logout-container">
+            <button onclick="logout()">Logout</button>
+            <br></br>
+            <center><font color=blue><b>• Design BY</b></font>&nbsp;<font color=red><strong>Satyam ❤️</strong></font></center>
+        </div>
+    </div>
+
+    <script>
+        const password = "Sattu4044";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFiles();
+            loadMessages();
+        });
+
+        function login() {
+            const inputPassword = document.getElementById('password').value;
+            if (inputPassword === password) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('profile-container').style.display = 'flex';
+            } else {
+                alert('Incorrect Password');
+            }
+        }
+
+        function logout() {
+            document.getElementById('profile-container').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+            document.getElementById('password').value = '';
+        }
+
+        function uploadFile(type) {
+            const fileInput = document.getElementById(`${type}-upload`);
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const container = document.getElementById(`${type}-container`);
+                const itemContainer = document.createElement('div');
+                itemContainer.classList.add('item-container');
+                
+                let element;
+                if (type.includes('image')) {
+                    element = document.createElement('img');
+                    element.src = e.target.result;
+                    element.onclick = () => zoomImage(element.src);
+                } else if (type.includes('video')) {
+                    element = document.createElement('video');
+                    element.src = e.target.result;
+                    element.controls = true;
+                } else if (type === 'audio') {
+                    element = document.createElement('audio');
+                    element.src = e.target.result;
+                    element.controls = true;
+                }
+                
+                itemContainer.appendChild(element);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'X';
+                deleteBtn.onclick = () => {
+                    itemContainer.remove();
+                    saveFiles();
+                };
+                
+                itemContainer.appendChild(deleteBtn);
+                container.appendChild(itemContainer);
+                saveFiles();
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function zoomImage(src) {
+            alert(`Zooming image: ${src}`);
+            // Implement zooming logic here
+        }
+
+        function loadFiles() {
+            // Implement loading of files from localStorage or other storage medium
+        }
+
+        function saveFiles() {
+            // Implement saving of files to localStorage or other storage medium
+        }
+
+        function loadMessages() {
+            // Implement loading of chat messages
+        }
+
+        function sendMessage() {
+            const sender = document.getElementById('chat-sender').value;
+            const message = document.getElementById('chat-input').value.trim();
+            
+            if (message === '') return;
+
+            const chatMessages = document.getElementById('chat-messages');
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message');
+
+            const senderElement = document.createElement('span');
+            senderElement.classList.add('sender');
+            senderElement.textContent = sender;
+            messageContainer.appendChild(senderElement);
+
+            const textElement = document.createElement('span');
+            textElement.classList.add('text');
+            textElement.textContent = message;
+            messageContainer.appendChild(textElement);
+
+            const timeElement = document.createElement('span');
+            timeElement.classList.add('time');
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
+            timeElement.textContent = timeString;
+            messageContainer.appendChild(timeElement);
+
+            chatMessages.appendChild(messageContainer);
+
+            // Clear input after sending message
+            document.getElementById('chat-input').value = '';
+
+            // Optionally save message to storage
+        }
+
+        function clearChat() {
+            document.getElementById('chat-messages').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
